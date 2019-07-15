@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeoCms", "LeoCms\LeoCms.csproj", "{37D2801C-29F8-42FE-9249-B0C1D74976C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeoCms", "LeoCms\LeoCms.csproj", "{37D2801C-29F8-42FE-9249-B0C1D74976C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{45468B54-FF0C-41E9-BB18-36AE955D0706}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.UnitTest", "Leo.UnitTest\Leo.UnitTest.csproj", "{3BF0F42E-9422-4580-8692-60E140A78521}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{70A275CA-64B1-42CF-8CB5-9F9825D5E3F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +21,17 @@ Global
 		{37D2801C-29F8-42FE-9249-B0C1D74976C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37D2801C-29F8-42FE-9249-B0C1D74976C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37D2801C-29F8-42FE-9249-B0C1D74976C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BF0F42E-9422-4580-8692-60E140A78521}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BF0F42E-9422-4580-8692-60E140A78521}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BF0F42E-9422-4580-8692-60E140A78521}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BF0F42E-9422-4580-8692-60E140A78521}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{37D2801C-29F8-42FE-9249-B0C1D74976C6} = {70A275CA-64B1-42CF-8CB5-9F9825D5E3F1}
+		{3BF0F42E-9422-4580-8692-60E140A78521} = {45468B54-FF0C-41E9-BB18-36AE955D0706}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09BC2F5A-456F-4FB7-9E2E-D381D011BFEC}
