@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Abstractions", "Leo.Abs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Extensions", "Leo.Extensions\Leo.Extensions.csproj", "{0F258A5F-B03A-40C8-9F63-198AC31B7FAB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Users", "Leo.Users\Leo.Users.csproj", "{F9DB9EB9-92E9-425A-9472-BF9D12F94383}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{0F258A5F-B03A-40C8-9F63-198AC31B7FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F258A5F-B03A-40C8-9F63-198AC31B7FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F258A5F-B03A-40C8-9F63-198AC31B7FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9DB9EB9-92E9-425A-9472-BF9D12F94383}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9DB9EB9-92E9-425A-9472-BF9D12F94383}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9DB9EB9-92E9-425A-9472-BF9D12F94383}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9DB9EB9-92E9-425A-9472-BF9D12F94383}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{03D9DD5B-74D7-469A-8BC5-AA835CA34C52} = {70A275CA-64B1-42CF-8CB5-9F9825D5E3F1}
 		{B227D98F-DA1B-4DBB-92E1-FDC83A590B55} = {70A275CA-64B1-42CF-8CB5-9F9825D5E3F1}
 		{0F258A5F-B03A-40C8-9F63-198AC31B7FAB} = {70A275CA-64B1-42CF-8CB5-9F9825D5E3F1}
+		{F9DB9EB9-92E9-425A-9472-BF9D12F94383} = {70A275CA-64B1-42CF-8CB5-9F9825D5E3F1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09BC2F5A-456F-4FB7-9E2E-D381D011BFEC}
