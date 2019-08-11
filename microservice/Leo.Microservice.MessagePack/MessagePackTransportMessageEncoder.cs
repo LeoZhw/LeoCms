@@ -12,12 +12,6 @@ namespace Leo.Microservice.MessagePack
 
         public byte[] Encode(TransportMessage transportMessage)
         {
-            //MessagePackTransportMessage messagePackTransportMessage = new MessagePackTransportMessage
-            //{
-            //    Id = transportMessage.Id,
-            //    ContentType = transportMessage.ContentType,
-            //    Content = transportMessage.Content
-            //};
             MessagePackTransportMessage messagePackTransportMessage = new MessagePackTransportMessage(transportMessage);
             return MessagePackSerializer.Serialize(messagePackTransportMessage);
         }

@@ -14,12 +14,6 @@ namespace Leo.Microservice.MessagePack
         {
             MessagePackTransportMessage messagePackTransportMessage = MessagePackSerializer.Deserialize<MessagePackTransportMessage>(data);
             return messagePackTransportMessage.GetTransportMessage();
-            //return new TransportMessage
-            //{
-            //    Id = messagePackTransportMessage.Id,
-            //    ContentType = messagePackTransportMessage.ContentType,
-            //    Content = messagePackTransportMessage.Content
-            //};
         }
 
         #endregion Implementation of ITransportMessageDecoder
