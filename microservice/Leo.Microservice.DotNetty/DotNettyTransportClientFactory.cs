@@ -11,9 +11,12 @@ using DotNetty.Common.Utilities;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Leo.Microservice.Abstractions.Executor;
 using Leo.Microservice.Abstractions.Serialization;
 using Leo.Microservice.Abstractions.Transport;
 using Leo.Microservice.DotNetty.Handler;
+using Leo.Microservice.DotNetty.Listener;
+using Leo.Microservice.DotNetty.Sender;
 using Microsoft.Extensions.Logging;
 
 namespace Leo.Microservice.DotNetty
@@ -28,6 +31,7 @@ namespace Leo.Microservice.DotNetty
         private readonly ITransportMessageEncoder _transportMessageEncoder;
         private readonly ITransportMessageDecoder _transportMessageDecoder;
         private readonly ILogger<DotNettyTransportClientFactory> _logger;
+        private readonly IServiceExecutor _serviceExecutor;
         private readonly ConcurrentDictionary<EndPoint, Lazy<Task<ITransportClient>>> _clients = new ConcurrentDictionary<EndPoint, Lazy<Task<ITransportClient>>>();
         private readonly Bootstrap _bootstrap;
 
@@ -39,11 +43,17 @@ namespace Leo.Microservice.DotNetty
 
         #region Constructor
 
-        public DotNettyTransportClientFactory(ITransportMessageCodecFactory codecFactory,  ILogger<DotNettyTransportClientFactory> logger)
+        public DotNettyTransportClientFactory(ITransportMessageCodecFactory codecFactory, ILogger<DotNettyTransportClientFactory> logger)
+            : this(codecFactory,  logger, null)
+        {
+        }
+
+        public DotNettyTransportClientFactory(ITransportMessageCodecFactory codecFactory, ILogger<DotNettyTransportClientFactory> logger, IServiceExecutor serviceExecutor)
         {
             _transportMessageEncoder = codecFactory.GetEncoder();
             _transportMessageDecoder = codecFactory.GetDecoder();
             _logger = logger;
+            _serviceExecutor = serviceExecutor;
             _bootstrap = GetBootstrap();
             _bootstrap.Handler(new ActionChannelInitializer<ISocketChannel>(c =>
             {
@@ -78,7 +88,7 @@ namespace Leo.Microservice.DotNetty
                         var bootstrap = _bootstrap;
                         //异步连接返回channel
                         var channel = await bootstrap.ConnectAsync(k);
-                        var messageListener = new MessageListener();
+                        var messageListener = new DotNettyClientMessageListener();
                         //设置监听
                         channel.GetAttribute(messageListenerKey).Set(messageListener);
                         //实例化发送者
@@ -87,7 +97,7 @@ namespace Leo.Microservice.DotNetty
                         channel.GetAttribute(messageSenderKey).Set(messageSender);
                         channel.GetAttribute(origEndPointKey).Set(k);
                         //创建客户端
-                        var client = new DotNettyTransportClient(messageSender, messageListener, _logger);
+                        var client = new DotNettyTransportClient(messageSender, messageListener, _logger, _serviceExecutor);
                         return client;
                     }
                     )).Value;//返回实例

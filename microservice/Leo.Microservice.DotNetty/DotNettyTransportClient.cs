@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Leo.Microservice.Abstractions.Executor;
 using Leo.Microservice.Abstractions.Serialization;
 using Leo.Microservice.Abstractions.Transport;
 using Microsoft.Extensions.Logging;
@@ -13,141 +14,90 @@ namespace Leo.Microservice.DotNetty
     /// <summary>
     /// 一个默认的传输客户端实现。
     /// </summary>
-    public class DotNettyTransportClient// : ITransportClient, IDisposable
+    public class DotNettyTransportClient : ITransportClient, IDisposable
     {
-        //#region Field
+        #region Field
 
-        //private readonly IMessageSender _messageSender;
-        //private readonly IMessageListener _messageListener;
-        //private readonly ILogger _logger;
+        private readonly IMessageSender _messageSender;
+        private readonly IMessageListener _messageListener;
+        private readonly ILogger _logger;
+        private readonly IServiceExecutor _serviceExecutor;
 
-        //private readonly ConcurrentDictionary<string, ManualResetValueTaskSource<TransportMessage>> _resultDictionary =
-        //    new ConcurrentDictionary<string, ManualResetValueTaskSource<TransportMessage>>();
+        #endregion Field
 
-        //#endregion Field
+        #region Constructor
 
-        //#region Constructor
+        public DotNettyTransportClient(IMessageSender messageSender, IMessageListener messageListener, ILogger logger, IServiceExecutor serviceExecutor)
+        {
+            _messageSender = messageSender;
+            _messageListener = messageListener;
+            _logger = logger;
+            _serviceExecutor = serviceExecutor;
+            messageListener.Received += MessageListener_Received;
+        }
 
-        //public DotNettyTransportClient(IMessageSender messageSender, IMessageListener messageListener, ILogger logger)
-        //{
-        //    _messageSender = messageSender;
-        //    _messageListener = messageListener;
-        //    _logger = logger;
-        //    messageListener.Received += MessageListener_Received;
-        //}
+        #endregion Constructor
 
-        //#endregion Constructor
+        #region Implementation of ITransportClient
 
-        //#region Implementation of ITransportClient
+        /// <summary>
+        /// 发送消息。
+        /// </summary>
+        /// <param name="message">远程调用消息模型。</param>
+        /// <returns>远程调用消息的传输消息。</returns>
+        public async Task SendAsync(TransportMessage transportMessage)
+        {
+            try
+            {
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug("准备发送消息。");
 
-        ///// <summary>
-        ///// 发送消息。
-        ///// </summary>
-        ///// <param name="message">远程调用消息模型。</param>
-        ///// <returns>远程调用消息的传输消息。</returns>
-        //public async Task<RemoteInvokeResultMessage> SendAsync(RemoteInvokeMessage message, CancellationToken cancellationToken)
-        //{
-        //    try
-        //    {
-        //        if (_logger.IsEnabled(LogLevel.Debug))
-        //            _logger.LogDebug("准备发送消息。");
+                try
+                {
+                    //发送
+                    await _messageSender.SendAndFlushAsync(transportMessage);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception("与服务端通讯时发生了异常。", exception);
+                }
 
-        //        var transportMessage = TransportMessage.CreateInvokeMessage(message);
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug("消息发送成功。");
+                
+            }
+            catch (Exception exception)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                    _logger.LogError(null,exception, "消息发送失败。");
+                throw;
+            }
+        }
 
-        //        //注册结果回调
-        //        var callbackTask = RegisterResultCallbackAsync(transportMessage.Id, cancellationToken);
+        #endregion Implementation of ITransportClient
 
-        //        try
-        //        {
-        //            //发送
-        //            await _messageSender.SendAndFlushAsync(transportMessage);
-        //        }
-        //        catch (Exception exception)
-        //        {
-        //            throw new Exception("与服务端通讯时发生了异常。", exception);
-        //        }
+        #region Implementation of IDisposable
 
-        //        if (_logger.IsEnabled(LogLevel.Debug))
-        //            _logger.LogDebug("消息发送成功。");
+        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        public void Dispose()
+        {
+            (_messageSender as IDisposable)?.Dispose();
+            (_messageListener as IDisposable)?.Dispose();
+        }
 
-        //        return await callbackTask;
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        if (_logger.IsEnabled(LogLevel.Error))
-        //            _logger.LogError(null,exception, "消息发送失败。");
-        //        throw;
-        //    }
-        //}
+        #endregion Implementation of IDisposable
 
-        //#endregion Implementation of ITransportClient
+        #region Private Method
 
-        //#region Implementation of IDisposable
+        private async Task MessageListener_Received(IMessageSender sender, TransportMessage message)
+        {
+            if (_logger.IsEnabled(LogLevel.Trace))
+                _logger.LogTrace("服务消费者接收到消息。");
+            
+            if (_serviceExecutor != null)
+                await _serviceExecutor.ExecuteAsync(sender, message);
+        }
 
-        ///// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-        //public void Dispose()
-        //{
-        //    (_messageSender as IDisposable)?.Dispose();
-        //    (_messageListener as IDisposable)?.Dispose();
-        //    foreach (var taskCompletionSource in _resultDictionary.Values)
-        //    {
-        //        taskCompletionSource.SetCanceled();
-        //    }
-        //}
-
-        //#endregion Implementation of IDisposable
-
-        //#region Private Method
-
-        ///// <summary>
-        ///// 注册指定消息的回调任务。
-        ///// </summary>
-        ///// <param name="id">消息Id。</param>
-        ///// <returns>远程调用结果消息模型。</returns>
-        //private async Task<RemoteInvokeResultMessage> RegisterResultCallbackAsync(string id, CancellationToken cancellationToken)
-        //{
-        //    if (_logger.IsEnabled(LogLevel.Debug))
-        //        _logger.LogDebug($"准备获取Id为：{id}的响应内容。");
-
-        //    var task = new ManualResetValueTaskSource<TransportMessage>();
-        //    _resultDictionary.TryAdd(id, task);
-        //    try
-        //    {
-        //        var result = await task.AwaitValue(cancellationToken);
-        //        return result.GetContent<RemoteInvokeResultMessage>();
-        //    }
-        //    finally
-        //    {
-        //        //删除回调任务
-        //        ManualResetValueTaskSource<TransportMessage> value;
-        //        _resultDictionary.TryRemove(id, out value);
-        //        value.SetCanceled();
-        //    }
-        //}
-
-        //private async Task MessageListener_Received(IMessageSender sender, TransportMessage message)
-        //{
-        //    if (_logger.IsEnabled(LogLevel.Trace))
-        //        _logger.LogTrace("服务消费者接收到消息。");
-
-        //    ManualResetValueTaskSource<TransportMessage> task;
-        //    if (!_resultDictionary.TryGetValue(message.Id, out task))
-        //        return;
-
-        //    if (message.IsInvokeResultMessage())
-        //    {
-        //        var content = message.GetContent<RemoteInvokeResultMessage>();
-        //        if (!string.IsNullOrEmpty(content.ExceptionMessage))
-        //        {
-        //            task.SetException(new CPlatformCommunicationException(content.ExceptionMessage, content.StatusCode));
-        //        }
-        //        else
-        //        {
-        //            task.SetResult(message);
-        //        }
-        //    }
-        //}
-
-        //#endregion Private Method
+        #endregion Private Method
     }
 }

@@ -12,9 +12,10 @@ using DotNetty.Transport.Libuv;
 using Leo.Microservice.Abstractions.Serialization;
 using Leo.Microservice.Abstractions.Transport;
 using Leo.Microservice.DotNetty.Handler;
+using Leo.Microservice.DotNetty.Sender;
 using Microsoft.Extensions.Logging;
 
-namespace Leo.Microservice.DotNetty
+namespace Leo.Microservice.DotNetty.Listener
 {
     public class DotNettyServerMessageListener : IMessageListener, IDisposable
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Leo.Microservice.Abstractions.Serialization;
 
 namespace Leo.Microservice.Abstractions.Transport
 {
@@ -16,6 +17,6 @@ namespace Leo.Microservice.Abstractions.Transport
         /// </summary>
         /// <param name="message">远程调用消息模型。</param>
         /// <returns>远程调用消息的传输消息。</returns>
-        Task<RemoteInvokeResultMessage> SendAsync(RemoteInvokeMessage message, CancellationToken cancellationToken);
+        Task SendAsync(TransportMessage transportMessage);
     }
 }
