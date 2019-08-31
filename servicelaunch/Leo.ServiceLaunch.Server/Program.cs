@@ -41,15 +41,6 @@ namespace Leo.ServiceLaunch.Server
                         }, serviceExecutor);
                     }).As<ITransportHost>();
                 })
-                //.ConfigureLogging(logger =>
-                //{
-                //})
-                //.Configure(builder =>
-                //{
-                //})
-                //.Configure(builder =>
-                //{
-                //})
                 .UseServer()  // 指定监听的端口
                 .UseStartup<Startup>()
                 .Build();
@@ -61,12 +52,5 @@ namespace Leo.ServiceLaunch.Server
 
             Console.ReadLine();
         }
-
-        //private void RegisterBuilder(ContainerBuilder builder)
-        //{
-            
-        //}
-
-
     }
 }

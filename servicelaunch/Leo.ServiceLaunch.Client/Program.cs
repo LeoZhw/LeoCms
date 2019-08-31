@@ -3,6 +3,7 @@ using Leo.Microservice.Abstractions.Executor;
 using Leo.Microservice.Abstractions.Serialization;
 using Leo.Microservice.Abstractions.Transport;
 using Leo.Microservice.DotNetty;
+using Leo.Microservice.Extensions.ServiceHostBuilder;
 using Leo.Microservice.Host;
 using Leo.Microservice.MessagePack;
 using Microsoft.Extensions.Logging;
@@ -20,9 +21,6 @@ namespace Leo.ServiceLaunch.Client
                 .RegisterServices(builder =>
                 {
                     builder.RegisterType<MessagePackTransportMessageCodecFactory>().As<ITransportMessageCodecFactory>().SingleInstance();
-                    //builder.RegisterType(typeof(RemoteInvokeService)).As(typeof(IRemoteInvokeService)).SingleInstance();
-                    //services.RegisterType<ServiceProxyGenerater>().As<IServiceProxyGenerater>().SingleInstance();
-                    //services.RegisterType<ServiceProxyProvider>().As<IServiceProxyProvider>().SingleInstance();
                     builder.Register(provider =>
                     {
                         IServiceExecutor serviceExecutor = null;  

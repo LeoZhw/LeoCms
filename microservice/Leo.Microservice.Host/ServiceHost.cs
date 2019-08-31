@@ -15,7 +15,6 @@ namespace Leo.Microservice.Host
         private IContainer _applicationServices;
         private readonly IServiceProvider _hostingServiceProvider;
         private readonly List<Action<IContainer>> _mapServicesDelegates;
-        private IApplicationLifetime _applicationLifetime;
 
         public ServiceHost(ContainerBuilder builder,
             IServiceProvider hostingServiceProvider,
@@ -41,11 +40,6 @@ namespace Leo.Microservice.Host
         {
             if (_applicationServices != null)
                 MapperServices(_applicationServices);
-            
-            _applicationLifetime = _hostingServiceProvider.GetService<IApplicationLifetime>();
-            cancellationToken.ThrowIfCancellationRequested();
-            _applicationLifetime?.NotifyStarted();
-            
         }
 
         public async Task StopAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -55,9 +49,6 @@ namespace Leo.Microservice.Host
             using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, cancellationToken))
             {
                 var token = linkedCts.Token;
-                _applicationLifetime?.StopApplication();
-                token.ThrowIfCancellationRequested();
-                _applicationLifetime?.NotifyStopped();
             }
         }
 

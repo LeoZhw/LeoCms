@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Leo.Microservice.Abstractions.Transport;
 using Leo.Microservice.Host;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,55 +28,18 @@ namespace Leo.Microservice.Extensions.ServiceHostBuilder
             });
         }
 
-        //public static IServiceHostBuilder UseClient(this IServiceHostBuilder hostBuilder)
-        //{
-        //    return hostBuilder.MapServices(mapper =>
-        //    {
-        //        var serviceEntryManager = mapper.Resolve<IServiceEntryManager>();
-        //        var addressDescriptors = serviceEntryManager.GetEntries().Select(i =>
-        //        {
-        //            i.Descriptor.Metadatas = null;
-        //            return new ServiceSubscriber
-        //            {
-        //                Address = new[] { new IpAddressModel {
-        //                     Ip = Dns.GetHostEntry(Dns.GetHostName())
-        //                     .AddressList.FirstOrDefault<IPAddress>
-        //                     (a => a.AddressFamily.ToString().Equals("InterNetwork")).ToString() } },
-        //                ServiceDescriptor = i.Descriptor
-        //            };
-        //        }).ToList();
-        //        mapper.Resolve<IServiceSubscribeManager>().SetSubscribersAsync(addressDescriptors);
-        //        mapper.Resolve<IModuleProvider>().Initialize();
-        //    });
-        //}
+        public static IServiceHostBuilder UseStartup(this IServiceHostBuilder hostBuilder, Type startupType)
+        {
+            return hostBuilder
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton(typeof(IStartup), startupType);
+                });
+        }
 
-        //public static void BuildServiceEngine(IContainer container)
-        //{
-        //    if (container.IsRegistered<IServiceEngine>())
-        //    {
-        //        var builder = new ContainerBuilder();
-
-        //        container.Resolve<IServiceEngineBuilder>().Build(builder);
-        //        var configBuilder = container.Resolve<IConfigurationBuilder>();
-        //        var appSettingPath = Path.Combine(AppConfig.ServerOptions.RootPath, "appsettings.json");
-        //        configBuilder.AddCPlatformFile("${appsettingspath}|" + appSettingPath, optional: false, reloadOnChange: true);
-        //        builder.Update(container);
-        //    }
-        //}
-
-        //public static async Task ConfigureRoute(IContainer mapper)
-        //{
-        //    if (AppConfig.ServerOptions.Protocol == CommunicationProtocol.Tcp ||
-        //     AppConfig.ServerOptions.Protocol == CommunicationProtocol.None)
-        //    {
-        //        var routeProvider = mapper.Resolve<IServiceRouteProvider>();
-        //        if (AppConfig.ServerOptions.EnableRouteWatch)
-        //            new ServiceRouteWatch(mapper.Resolve<CPlatformContainer>(),
-        //                async () => await routeProvider.RegisterRoutes(
-        //                Math.Round(Convert.ToDecimal(Process.GetCurrentProcess().TotalProcessorTime.TotalSeconds), 2, MidpointRounding.AwayFromZero)));
-        //        else
-        //            await routeProvider.RegisterRoutes(0);
-        //    }
-        //}
+        public static IServiceHostBuilder UseStartup<TStartup>(this IServiceHostBuilder hostBuilder) where TStartup : IStartup
+        {
+            return hostBuilder.UseStartup(typeof(TStartup));
+        }
     }
 }

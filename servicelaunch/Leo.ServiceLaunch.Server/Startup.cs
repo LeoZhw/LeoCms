@@ -12,19 +12,8 @@ namespace Leo.ServiceLaunch.Server
 {
     class Startup : IStartup
     {
-        //public Startup(IConfigurationBuilder config)
-        //{
-        //    ConfigureEventBus(config);
-        //    ConfigureCache(config);
-        //}
-
         public IContainer ConfigureServices(ContainerBuilder builder)
         {
-            //var services = new ServiceCollection();
-            //ConfigureLogging(services);
-            //builder.Populate(services);
-            //ServiceLocator.Current = builder.Build();
-            //return ServiceLocator.Current;
             return builder.Build();
         }
 

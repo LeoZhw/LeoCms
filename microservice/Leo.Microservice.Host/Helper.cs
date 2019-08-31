@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Leo.Microservice.Host
 {
-    internal static class ServiceCollectionExtensions
+    internal static class Helper
     {
         public static IServiceCollection Clone(this IServiceCollection serviceCollection)
         {
