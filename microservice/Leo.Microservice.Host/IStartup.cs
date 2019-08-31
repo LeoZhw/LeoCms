@@ -8,7 +8,7 @@ namespace Leo.Microservice.Host
 {
     public interface IStartup
     {
-        IContainer ConfigureServices(ContainerBuilder services);
+        IContainer ConfigureServices(ContainerBuilder builder);
 
         void Configure(IContainer app);
 

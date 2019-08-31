@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Leo.Microservice.Abstractions\Leo.Microservice.Abstractions.csproj" />
+    <ProjectReference Include="..\Leo.Microservice.Host\Leo.Microservice.Host.csproj" />
+  </ItemGroup>
+
+</Project>

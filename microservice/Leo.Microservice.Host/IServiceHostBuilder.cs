@@ -21,6 +21,5 @@ namespace Leo.Microservice.Host
         IServiceHostBuilder Configure(Action<IConfigurationBuilder> builder);
 
         IServiceHostBuilder MapServices(Action<IContainer> mapper);
-
     }
 }

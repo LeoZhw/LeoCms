@@ -70,6 +70,24 @@ namespace Leo.Microservice.Host
             return _applicationServices;
         }
 
+        private IContainer BuildApplication()
+        {
+            try
+            {
+                EnsureApplicationServices();
+                Action<IContainer> configure = _startup.Configure;
+                if (_applicationServices == null)
+                    _applicationServices = _builder.Build();
+                configure(_applicationServices);
+                return _applicationServices;
+            }
+            catch (Exception ex)
+            {
+                Console.Out.WriteLine("应用程序启动异常: " + ex.ToString());
+                throw;
+            }
+        }
+
         private void EnsureApplicationServices()
         {
             if (_applicationServices == null)
@@ -89,23 +107,7 @@ namespace Leo.Microservice.Host
             _startup = _hostingServiceProvider.GetRequiredService<IStartup>();
         }
 
-        private IContainer BuildApplication()
-        {
-            try
-            {
-                EnsureApplicationServices();
-                Action<IContainer> configure = _startup.Configure;
-                if (_applicationServices == null)
-                    _applicationServices = _builder.Build();
-                configure(_applicationServices);
-                return _applicationServices;
-            }
-            catch (Exception ex)
-            {
-                Console.Out.WriteLine("应用程序启动异常: " + ex.ToString());
-                throw;
-            }
-        }
+        
 
         private void MapperServices(IContainer mapper)
         {

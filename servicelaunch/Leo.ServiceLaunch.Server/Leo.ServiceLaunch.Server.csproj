@@ -6,7 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\microservice\Leo.Microservice.Abstractions\Leo.Microservice.Abstractions.csproj" />
+    <ProjectReference Include="..\..\microservice\Leo.Microservice.DotNetty\Leo.Microservice.DotNetty.csproj" />
+    <ProjectReference Include="..\..\microservice\Leo.Microservice.Executor\Leo.Microservice.Executor.csproj" />
+    <ProjectReference Include="..\..\microservice\Leo.Microservice.Extensions\Leo.Microservice.Extensions.csproj" />
     <ProjectReference Include="..\..\microservice\Leo.Microservice.Host\Leo.Microservice.Host.csproj" />
+    <ProjectReference Include="..\..\microservice\Leo.Microservice.MessagePack\Leo.Microservice.MessagePack.csproj" />
   </ItemGroup>
 
 </Project>

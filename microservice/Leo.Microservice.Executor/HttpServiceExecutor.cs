@@ -35,7 +35,8 @@ namespace Leo.Microservice.Executor
         public async Task ExecuteAsync(IMessageSender sender, TransportMessage message)
         {
             if (_logger.IsEnabled(LogLevel.Trace))
-                _logger.LogTrace("服务提供者接收到消息。");
+                _logger.LogTrace($"服务提供者接收到消。");
+            Console.WriteLine($"服务提供者接收到消息，Content:{message.Content}，ID:{ message.Id}");
             return;
 
         }

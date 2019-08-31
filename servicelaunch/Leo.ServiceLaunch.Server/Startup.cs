@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Leo.Microservice.Host;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,9 +20,9 @@ namespace Leo.ServiceLaunch.Server
 
         public IContainer ConfigureServices(ContainerBuilder builder)
         {
-            var services = new ServiceCollection();
+            //var services = new ServiceCollection();
             //ConfigureLogging(services);
-            builder.Populate(services);
+            //builder.Populate(services);
             //ServiceLocator.Current = builder.Build();
             //return ServiceLocator.Current;
             return builder.Build();

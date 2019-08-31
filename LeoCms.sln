@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.89
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeoCms", "LeoCms\LeoCms.csproj", "{37D2801C-29F8-42FE-9249-B0C1D74976C6}"
 EndProject
@@ -31,13 +31,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.DotNetty",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Executor", "microservice\Leo.Microservice.Executor\Leo.Microservice.Executor.csproj", "{5DCE16E8-5387-425B-9810-53CF2BE6A981}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Microservice.Host", "microservice\Leo.Microservice.Host\Leo.Microservice.Host.csproj", "{B20CFF65-D197-4236-8539-0CC0DC02EF73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Host", "microservice\Leo.Microservice.Host\Leo.Microservice.Host.csproj", "{B20CFF65-D197-4236-8539-0CC0DC02EF73}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "servicelaunch", "servicelaunch", "{73552ECD-0140-4031-AFDE-792CDFFAC731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.ServiceLaunch.Client", "servicelaunch\Leo.ServiceLaunch.Client\Leo.ServiceLaunch.Client.csproj", "{57D52CF9-E66B-47C8-A2A7-966B6DD8C402}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.ServiceLaunch.Client", "servicelaunch\Leo.ServiceLaunch.Client\Leo.ServiceLaunch.Client.csproj", "{57D52CF9-E66B-47C8-A2A7-966B6DD8C402}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.ServiceLaunch.Server", "servicelaunch\Leo.ServiceLaunch.Server\Leo.ServiceLaunch.Server.csproj", "{6F637063-8F90-4517-8ECD-680F0FA29C41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.ServiceLaunch.Server", "servicelaunch\Leo.ServiceLaunch.Server\Leo.ServiceLaunch.Server.csproj", "{6F637063-8F90-4517-8ECD-680F0FA29C41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Microservice.Extensions", "microservice\Leo.Microservice.Extensions\Leo.Microservice.Extensions.csproj", "{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +103,10 @@ Global
 		{6F637063-8F90-4517-8ECD-680F0FA29C41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F637063-8F90-4517-8ECD-680F0FA29C41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F637063-8F90-4517-8ECD-680F0FA29C41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{B20CFF65-D197-4236-8539-0CC0DC02EF73} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
 		{57D52CF9-E66B-47C8-A2A7-966B6DD8C402} = {73552ECD-0140-4031-AFDE-792CDFFAC731}
 		{6F637063-8F90-4517-8ECD-680F0FA29C41} = {73552ECD-0140-4031-AFDE-792CDFFAC731}
+		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09BC2F5A-456F-4FB7-9E2E-D381D011BFEC}
