@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.ServiceLaunch.Client", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.ServiceLaunch.Server", "servicelaunch\Leo.ServiceLaunch.Server\Leo.ServiceLaunch.Server.csproj", "{6F637063-8F90-4517-8ECD-680F0FA29C41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Microservice.Extensions", "microservice\Leo.Microservice.Extensions\Leo.Microservice.Extensions.csproj", "{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Extensions", "microservice\Leo.Microservice.Extensions\Leo.Microservice.Extensions.csproj", "{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
