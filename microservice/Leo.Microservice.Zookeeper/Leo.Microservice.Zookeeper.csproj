@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ZooKeeperNetEx" Version="3.4.12.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Leo.Microservice.Abstractions\Leo.Microservice.Abstractions.csproj" />
+    <ProjectReference Include="..\Leo.Microservice.Utils\Leo.Microservice.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

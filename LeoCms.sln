@@ -41,6 +41,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.ServiceLaunch.Server", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Extensions", "microservice\Leo.Microservice.Extensions\Leo.Microservice.Extensions.csproj", "{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Microservice.Zookeeper", "microservice\Leo.Microservice.Zookeeper\Leo.Microservice.Zookeeper.csproj", "{3A1A7390-711B-4A45-9473-F9318663405B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Microservice.Utils", "microservice\Leo.Microservice.Utils\Leo.Microservice.Utils.csproj", "{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +111,14 @@ Global
 		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A1A7390-711B-4A45-9473-F9318663405B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A1A7390-711B-4A45-9473-F9318663405B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A1A7390-711B-4A45-9473-F9318663405B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A1A7390-711B-4A45-9473-F9318663405B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +139,8 @@ Global
 		{57D52CF9-E66B-47C8-A2A7-966B6DD8C402} = {73552ECD-0140-4031-AFDE-792CDFFAC731}
 		{6F637063-8F90-4517-8ECD-680F0FA29C41} = {73552ECD-0140-4031-AFDE-792CDFFAC731}
 		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
+		{3A1A7390-711B-4A45-9473-F9318663405B} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
+		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09BC2F5A-456F-4FB7-9E2E-D381D011BFEC}
