@@ -1,10 +1,10 @@
-﻿using Leo.Microservice.Zookeeper.Routing;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Leo.Microservice.Zookeeper
+namespace Leo.Microservice.Abstractions.Route
 {
     /// <summary>
     /// 一个抽象的服务路由发现者。
@@ -45,7 +45,7 @@ namespace Leo.Microservice.Zookeeper
         /// </summary>
         /// <param name="routes">地址列表。</param>
         /// <returns>一个任务。</returns>
-        Task RemveAddressAsync(IEnumerable<string> Address);
+        Task RemveAddressAsync(IEnumerable<EndPoint> Address);
         /// <summary>
         /// 清空所有的服务路由。
         /// </summary>

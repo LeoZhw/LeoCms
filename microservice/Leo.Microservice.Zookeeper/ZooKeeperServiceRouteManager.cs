@@ -1,12 +1,13 @@
-﻿using Leo.Microservice.Utils;
+﻿using Leo.Microservice.Abstractions.Route;
+using Leo.Microservice.Utils;
 using Leo.Microservice.Utils.Serialization;
-using Leo.Microservice.Zookeeper.Routing;
 using Leo.Microservice.Zookeeper.WatcherProvider;
 using Microsoft.Extensions.Logging;
 using org.apache.zookeeper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,6 @@ namespace Leo.Microservice.Zookeeper
         private readonly ZookeeperClientProvider _zookeeperClientProvider;
 
         public ZooKeeperServiceRouteManager(ConfigInfo configInfo, ISerializer<byte[]> serializer,
-            ISerializer<string> stringSerializer,
             ILogger<ZooKeeperServiceRouteManager> logger,
             ZookeeperClientProvider zookeeperClientProvider)
         {
@@ -155,12 +155,12 @@ namespace Leo.Microservice.Zookeeper
         public async Task SetRoutesAsync(IEnumerable<ServiceRoute> routes)
         {
             var hostAddr = NetUtils.GetHostAddress();
-            var serviceRoutes = await GetRoutes(routes.Select(p => p.serviceRouteDescriptor.Id));
+            var serviceRoutes = await GetRoutes(routes.Select(p => p.ServiceRouteDescriptor.Id));
             if (serviceRoutes.Count() > 0)
             {
                 foreach (var route in routes)
                 {
-                    var serviceRoute = serviceRoutes.Where(p => p.serviceRouteDescriptor.Id == route.serviceRouteDescriptor.Id).FirstOrDefault();
+                    var serviceRoute = serviceRoutes.Where(p => p.ServiceRouteDescriptor.Id == route.ServiceRouteDescriptor.Id).FirstOrDefault();
                     if (serviceRoute != null)
                     {
                         var addresses = serviceRoute.Address.Concat(
@@ -175,6 +175,7 @@ namespace Leo.Microservice.Zookeeper
                     }
                 }
             }
+            //删除主机预留端口，用于监听服务，不是服务提供端口，因此不需要注册到注册中心
             await RemoveExceptRoutesAsync(routes, hostAddr);
 
             if (_logger.IsEnabled(LogLevel.Information))
@@ -192,7 +193,7 @@ namespace Leo.Microservice.Zookeeper
 
                 foreach (var serviceRoute in routes)
                 {
-                    var nodePath = $"{path}{serviceRoute.serviceRouteDescriptor.Id}";
+                    var nodePath = $"{path}{serviceRoute.ServiceRouteDescriptor.Id}";
                     var nodeData = _serializer.Serialize(serviceRoute);
                     if (await zooKeeper.existsAsync(nodePath) == null)
                     {
@@ -216,7 +217,7 @@ namespace Leo.Microservice.Zookeeper
             }
         }
 
-        public async Task RemveAddressAsync(IEnumerable<string> Address)
+        public async Task RemveAddressAsync(IEnumerable<EndPoint> Address)
         {
             var routes = await GetRoutesAsync();
             foreach (var route in routes)
@@ -226,7 +227,7 @@ namespace Leo.Microservice.Zookeeper
             await SetRoutesAsync(routes);
         }
 
-        private async Task RemoveExceptRoutesAsync(IEnumerable<ServiceRoute> routes, string hostAddr)
+        private async Task RemoveExceptRoutesAsync(IEnumerable<ServiceRoute> routes, EndPoint hostAddr)
         {
             var path = _configInfo.RoutePath;
             if (!path.EndsWith("/"))
@@ -237,12 +238,12 @@ namespace Leo.Microservice.Zookeeper
             {
                 if (_routes != null)
                 {
-                    var oldRouteIds = _routes.Select(i => i.serviceRouteDescriptor.Id).ToArray();
-                    var newRouteIds = routes.Select(i => i.serviceRouteDescriptor.Id).ToArray();
+                    var oldRouteIds = _routes.Select(i => i.ServiceRouteDescriptor.Id).ToArray();
+                    var newRouteIds = routes.Select(i => i.ServiceRouteDescriptor.Id).ToArray();
                     var deletedRouteIds = oldRouteIds.Except(newRouteIds).ToArray();
                     foreach (var deletedRouteId in deletedRouteIds)
                     {
-                        var addresses = _routes.Where(p => p.serviceRouteDescriptor.Id == deletedRouteId).Select(p => p.Address).FirstOrDefault();
+                        var addresses = _routes.Where(p => p.ServiceRouteDescriptor.Id == deletedRouteId).Select(p => p.Address).FirstOrDefault();
                         if (addresses.Contains(hostAddr))
                         {
                             var nodePath = $"{path}{deletedRouteId}";
@@ -370,14 +371,14 @@ namespace Leo.Microservice.Zookeeper
 
             var newRoute = await GetRoute(newData);
             //得到旧的路由。
-            var oldRoute = _routes.FirstOrDefault(i => i.serviceRouteDescriptor.Id == newRoute.serviceRouteDescriptor.Id);
+            var oldRoute = _routes.FirstOrDefault(i => i.ServiceRouteDescriptor.Id == newRoute.ServiceRouteDescriptor.Id);
 
             lock (_routes)
             {
                 //删除旧路由，并添加上新的路由。
                 _routes =
                     _routes
-                        .Where(i => i.serviceRouteDescriptor.Id != newRoute.serviceRouteDescriptor.Id)
+                        .Where(i => i.ServiceRouteDescriptor.Id != newRoute.ServiceRouteDescriptor.Id)
                         .Concat(new[] { newRoute }).ToArray();
             }
 
@@ -411,13 +412,13 @@ namespace Leo.Microservice.Zookeeper
             {
                 _routes = _routes
                     //删除无效的节点路由。
-                    .Where(i => !deletedChildrens.Contains(i.serviceRouteDescriptor.Id))
+                    .Where(i => !deletedChildrens.Contains(i.ServiceRouteDescriptor.Id))
                     //连接上新的路由。
                     .Concat(newRoutes)
                     .ToArray();
             }
             //需要删除的路由集合。
-            var deletedRoutes = routes.Where(i => deletedChildrens.Contains(i.serviceRouteDescriptor.Id)).ToArray();
+            var deletedRoutes = routes.Where(i => deletedChildrens.Contains(i.ServiceRouteDescriptor.Id)).ToArray();
             //触发删除事件。
             OnRemoved(deletedRoutes.Select(route => new ServiceRouteEventArgs(route)).ToArray());
 

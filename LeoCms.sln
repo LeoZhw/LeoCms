@@ -41,9 +41,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.ServiceLaunch.Server", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Extensions", "microservice\Leo.Microservice.Extensions\Leo.Microservice.Extensions.csproj", "{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Microservice.Zookeeper", "microservice\Leo.Microservice.Zookeeper\Leo.Microservice.Zookeeper.csproj", "{3A1A7390-711B-4A45-9473-F9318663405B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Zookeeper", "microservice\Leo.Microservice.Zookeeper\Leo.Microservice.Zookeeper.csproj", "{3A1A7390-711B-4A45-9473-F9318663405B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Microservice.Utils", "microservice\Leo.Microservice.Utils\Leo.Microservice.Utils.csproj", "{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Utils", "microservice\Leo.Microservice.Utils\Leo.Microservice.Utils.csproj", "{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Redis", "microservice\Leo.Microservice.Redis\Leo.Microservice.Redis.csproj", "{F7B30A49-EE82-499A-9B81-F17E776DED8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Microservice.Configurations", "microservice\Leo.Microservice.Configurations\Leo.Microservice.Configurations.csproj", "{5DE1822A-692E-465F-8745-C0DAF35CC7FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +123,14 @@ Global
 		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7B30A49-EE82-499A-9B81-F17E776DED8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7B30A49-EE82-499A-9B81-F17E776DED8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7B30A49-EE82-499A-9B81-F17E776DED8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7B30A49-EE82-499A-9B81-F17E776DED8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DE1822A-692E-465F-8745-C0DAF35CC7FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE1822A-692E-465F-8745-C0DAF35CC7FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE1822A-692E-465F-8745-C0DAF35CC7FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE1822A-692E-465F-8745-C0DAF35CC7FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +153,8 @@ Global
 		{0A4E6A5C-9611-4944-87C6-5A8CE095FDA2} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
 		{3A1A7390-711B-4A45-9473-F9318663405B} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
 		{AD0070C3-E8F3-4E7F-9A57-389C6AFC37A1} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
+		{F7B30A49-EE82-499A-9B81-F17E776DED8D} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
+		{5DE1822A-692E-465F-8745-C0DAF35CC7FA} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09BC2F5A-456F-4FB7-9E2E-D381D011BFEC}

@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Leo.Microservice.Zookeeper.Routing
+namespace Leo.Microservice.Abstractions.Cache.Model
 {
-    public class ServiceRoute
+    public class ServiceCache
     {
         /// <summary>
         /// 服务可用地址。
         /// </summary>
-        public IEnumerable<string> Address { get; set; }
+        public IEnumerable<CacheEndpoint> CacheEndpoint { get; set; }
         /// <summary>
         /// 服务描述符。
         /// </summary>
-        public ServiceRouteDescriptor serviceRouteDescriptor { get; set; }
+        public CacheDescriptor CacheDescriptor { get; set; }
 
         #region Equality members
 
@@ -23,17 +23,17 @@ namespace Leo.Microservice.Zookeeper.Routing
         /// <param name="obj">The object to compare with the current object. </param>
         public override bool Equals(object obj)
         {
-            var model = obj as ServiceRoute;
+            var model = obj as ServiceCache;
             if (model == null)
                 return false;
 
             if (obj.GetType() != GetType())
                 return false;
 
-            if (model.serviceRouteDescriptor != serviceRouteDescriptor)
+            if (model.CacheDescriptor != CacheDescriptor)
                 return false;
 
-            return model.Address.Count() == Address.Count() && model.Address.All(addressModel => Address.Contains(addressModel));
+            return model.CacheEndpoint.Count() == CacheEndpoint.Count() && model.CacheEndpoint.All(addressModel => CacheEndpoint.Contains(addressModel));
         }
 
         /// <summary>Serves as the default hash function. </summary>
@@ -43,12 +43,12 @@ namespace Leo.Microservice.Zookeeper.Routing
             return ToString().GetHashCode();
         }
 
-        public static bool operator ==(ServiceRoute model1, ServiceRoute model2)
+        public static bool operator ==(ServiceCache model1, ServiceCache model2)
         {
             return Equals(model1, model2);
         }
 
-        public static bool operator !=(ServiceRoute model1, ServiceRoute model2)
+        public static bool operator !=(ServiceCache model1, ServiceCache model2)
         {
             return !Equals(model1, model2);
         }
