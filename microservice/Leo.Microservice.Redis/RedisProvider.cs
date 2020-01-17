@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using Leo.Microservice.Abstractions.Cache;
+using Leo.Microservice.Abstractions.Cache.HashAlgorithms;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,24 +19,27 @@ namespace Leo.Microservice.Redis
         private string _keySuffix;
         private Lazy<int> _connectTimeout;
         private readonly Lazy<ICacheClient<IDatabase>> _cacheClient;
-        private readonly IAddressResolver addressResolver;
+        private readonly ICacheAddressResolver addressResolver;
         #endregion
 
         #region 构造函数
 
         public RedisProvider(string appName, IContainer container )
         {
-            _context = new Lazy<RedisContext>();
+            _context = new Lazy<RedisContext>(() => {
+                //if (container.IsRegisteredWithKey<RedisContext>(appName))
+                    return container.ResolveKeyed<RedisContext>(appName);
+                //else
+                //    return CacheContainer.GetInstances<RedisContext>(appName);
+            });
             _keySuffix = appName;
             _defaultExpireTime = new Lazy<long>(() => long.Parse(_context.Value._defaultExpireTime));
             _connectTimeout = new Lazy<int>(() => int.Parse(_context.Value._connectTimeout));
             if (container.IsRegistered<ICacheClient<IDatabase>>())
             {
-                addressResolver = container.Resolve<IAddressResolver>();
+                addressResolver = container.Resolve<ICacheAddressResolver>();
                 _cacheClient = new Lazy<ICacheClient<IDatabase>>(() => container.Resolve<ICacheClient<IDatabase>>());
             }
-            else
-                _cacheClient = new Lazy<ICacheClient<IDatabase>>(() => container.GetInstances<ICacheClient<IDatabase>>(CacheTargetType.Redis.ToString()));
         }
 
         public RedisProvider()
@@ -50,7 +55,7 @@ namespace Leo.Microservice.Redis
         /// <param name="key">键</param>
         /// <param name="value">值</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void Add(string key, object value)
@@ -64,7 +69,7 @@ namespace Leo.Microservice.Redis
         /// <param name="key">键</param>
         /// <param name="value">值</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void AddAsync(string key, object value)
@@ -79,7 +84,7 @@ namespace Leo.Microservice.Redis
         /// <param name="value">值</param>
         /// <param name="defaultExpire">默认配置失效时间</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void Add(string key, object value, bool defaultExpire)
@@ -94,7 +99,7 @@ namespace Leo.Microservice.Redis
         /// <param name="value">值</param>
         /// <param name="defaultExpire">默认配置失效时间</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void AddAsync(string key, object value, bool defaultExpire)
@@ -109,7 +114,7 @@ namespace Leo.Microservice.Redis
         /// <param name="value">值</param>
         /// <param name="numOfMinutes">默认配置失效时间</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void Add(string key, object value, long numOfMinutes)
@@ -125,7 +130,7 @@ namespace Leo.Microservice.Redis
         /// <param name="value">值</param>
         /// <param name="numOfMinutes">默认配置失效时间</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void AddAsync(string key, object value, long numOfMinutes)
@@ -141,21 +146,13 @@ namespace Leo.Microservice.Redis
         /// <param name="value">值</param>
         /// <param name="timeSpan">配置时间间隔</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void Add(string key, object value, TimeSpan timeSpan)
         {
             var node = GetRedisNode(key);
-            var redis = GetRedisClient(new RedisEndpoint()
-            {
-                DbIndex = int.Parse(node.Db),
-                Host = node.Host,
-                Password = node.Password,
-                Port = int.Parse(node.Port),
-                MinSize = int.Parse(node.MinSize),
-                MaxSize = int.Parse(node.MaxSize),
-            });
+            var redis = GetRedisClient(node);
             redis.Set(GetKeySuffix(key), value, timeSpan);
         }
 
@@ -166,7 +163,7 @@ namespace Leo.Microservice.Redis
         /// <param name="value">值</param>
         /// <param name="timeSpan">配置时间间隔</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void AddAsync(string key, object value, TimeSpan timeSpan)
@@ -181,7 +178,7 @@ namespace Leo.Microservice.Redis
         /// <param name="keys">KEY值集合</param>
         /// <returns>需要返回的对象集合</returns>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public IDictionary<string, T> Get<T>(IEnumerable<string> keys)
@@ -191,15 +188,7 @@ namespace Leo.Microservice.Redis
             {
 
                 var node = GetRedisNode(key);
-                var redis = GetRedisClient(new RedisEndpoint()
-                {
-                    DbIndex = int.Parse(node.Db),
-                    Host = node.Host,
-                    Password = node.Password,
-                    Port = int.Parse(node.Port),
-                    MinSize = int.Parse(node.MinSize),
-                    MaxSize = int.Parse(node.MaxSize),
-                });
+                var redis = GetRedisClient(node);
                 result.Add(key, redis.Get<T>(key));
             }
             return result;
@@ -212,7 +201,7 @@ namespace Leo.Microservice.Redis
         /// <param name="keys">KEY值集合</param>
         /// <returns>需要返回的对象集合</returns>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public async Task<IDictionary<string, T>> GetAsync<T>(IEnumerable<string> keys)
@@ -222,15 +211,7 @@ namespace Leo.Microservice.Redis
             {
 
                 var node = GetRedisNode(key);
-                var redis = GetRedisClient(new RedisEndpoint()
-                {
-                    DbIndex = int.Parse(node.Db),
-                    Host = node.Host,
-                    Password = node.Password,
-                    Port = int.Parse(node.Port),
-                    MinSize = int.Parse(node.MinSize),
-                    MaxSize = int.Parse(node.MaxSize),
-                });
+                var redis = GetRedisClient(node);
                 result.Add(key, await redis.GetAsync<T>(key));
             }
             return result;
@@ -242,7 +223,7 @@ namespace Leo.Microservice.Redis
         /// <param name="key">KEY值</param>
         /// <returns>需要返回的对象</returns>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public object Get(string key)
@@ -269,22 +250,14 @@ namespace Leo.Microservice.Redis
         /// <param name="key">KEY值</param>
         /// <returns>需要返回的对象</returns>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public T Get<T>(string key)
         {
             var node = GetRedisNode(key);
             var result = default(T);
-            var redis = GetRedisClient(new RedisEndpoint()
-            {
-                DbIndex = int.Parse(node.Db),
-                Host = node.Host,
-                Password = node.Password,
-                Port = int.Parse(node.Port),
-                MinSize = int.Parse(node.MinSize),
-                MaxSize = int.Parse(node.MaxSize),
-            });
+            var redis = GetRedisClient(node);
             result = redis.Get<T>(GetKeySuffix(key));
             return result;
         }
@@ -300,15 +273,7 @@ namespace Leo.Microservice.Redis
         public async Task<T> GetAsync<T>(string key)
         {
             var node = GetRedisNode(key);
-            var redis = GetRedisClient(new RedisEndpoint()
-            {
-                DbIndex = int.Parse(node.Db),
-                Host = node.Host,
-                Password = node.Password,
-                Port = int.Parse(node.Port),
-                MinSize = int.Parse(node.MinSize),
-                MaxSize = int.Parse(node.MaxSize),
-            });
+            var redis = GetRedisClient(node);
 
             var result = await Task.Run(() => redis.Get<T>(GetKeySuffix(key)));
             return result;
@@ -322,7 +287,7 @@ namespace Leo.Microservice.Redis
         /// <param name="obj">需要转化返回的对象</param>
         /// <returns>是否成功</returns>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public bool GetCacheTryParse(string key, out object obj)
@@ -338,21 +303,13 @@ namespace Leo.Microservice.Redis
         /// </summary>
         /// <param name="key">KEY键</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void Remove(string key)
         {
             var node = GetRedisNode(key);
-            var redis = GetRedisClient(new RedisEndpoint()
-            {
-                DbIndex = int.Parse(node.Db),
-                Host = node.Host,
-                Password = node.Password,
-                Port = int.Parse(node.Port),
-                MinSize = int.Parse(node.MinSize),
-                MaxSize = int.Parse(node.MaxSize),
-            });
+            var redis = GetRedisClient(node);
             redis.Remove(GetKeySuffix(key));
 
         }
@@ -362,7 +319,7 @@ namespace Leo.Microservice.Redis
         /// </summary>
         /// <param name="key">KEY键</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void RemoveAsync(string key)
@@ -411,24 +368,24 @@ namespace Leo.Microservice.Redis
 
         #region 私有方法
 
-        private IDatabase GetRedisClient(CacheEndpoint info)
+        private IDatabase GetRedisClient(RedisEndPoint info)
         {
             return
                 _cacheClient.Value
                     .GetClient(info, ConnectTimeout);
         }
 
-        private ConsistentHashNode GetRedisNode(string item)
+        private RedisEndPoint GetRedisNode(string item)
         {
             if (addressResolver != null)
             {
-                return addressResolver.Resolver($"{KeySuffix}.{CacheTargetType.Redis.ToString()}", item).Result;
+                return (RedisEndPoint)addressResolver.Resolver($"{KeySuffix}.redis", item).Result;
             }
             else
             {
-                ConsistentHash<ConsistentHashNode> hash;
-                _context.Value.dicHash.TryGetValue(CacheTargetType.Redis.ToString(), out hash);
-                return hash != null ? hash.GetItemNode(item) : default(ConsistentHashNode);
+                ConsistentHash<RedisEndPoint> hash;
+                _context.Value.dicHash.TryGetValue("redis", out hash);
+                return hash != null ? hash.GetItemNode(item) : default(RedisEndPoint);
             }
         }
 
@@ -452,7 +409,7 @@ namespace Leo.Microservice.Redis
             return string.IsNullOrEmpty(KeySuffix) ? key : string.Format("_{0}_{1}", KeySuffix, key);
         }
 
-        public async Task<bool> ConnectionAsync(CacheEndpoint endpoint)
+        public async Task<bool> ConnectionAsync(EndPoint endpoint)
         {
             var connection = await _cacheClient
                  .Value.ConnectionAsync(endpoint, ConnectTimeout);

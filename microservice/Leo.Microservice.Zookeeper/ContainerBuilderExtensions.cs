@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Leo.Microservice.Abstractions.Route;
 using Leo.Microservice.Utils.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

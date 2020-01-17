@@ -1,7 +1,7 @@
 ﻿using Leo.Microservice.Abstractions.Cache;
-using Leo.Microservice.Abstractions.Cache.Model;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Leo.Microservice.Redis
@@ -10,19 +10,19 @@ namespace Leo.Microservice.Redis
     /// redis 终端
     /// </summary>
     /// <remarks>
-    /// 	<para>创建：范亮</para>
+    /// 	<para>创建：张宏伟</para>
     /// 	<para>日期：2016/4/2</para>
     /// </remarks>
-    public class RedisEndpoint : CacheEndpoint
+    public class RedisEndPoint : EndPoint
     {
         /// <summary>
         /// 主机
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
-        public new string Host
+        public string Host
         {
             get; set;
         }
@@ -31,10 +31,10 @@ namespace Leo.Microservice.Redis
         /// 端口
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
-        public new int Port
+        public int Port
         {
             get; set;
         }
@@ -43,7 +43,7 @@ namespace Leo.Microservice.Redis
         /// 密码
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public string Password
@@ -55,7 +55,7 @@ namespace Leo.Microservice.Redis
         /// 数据库
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public int DbIndex

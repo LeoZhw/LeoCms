@@ -1,7 +1,10 @@
-﻿using Leo.Microservice.Abstractions.Cache.HashAlgorithms;
+﻿using Autofac;
+using Leo.Microservice.Abstractions.Cache.HashAlgorithms;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Leo.Microservice.Redis
@@ -10,7 +13,7 @@ namespace Leo.Microservice.Redis
     /// redis数据上下文
     /// </summary>
     /// <remarks>
-    /// 	<para>创建：范亮</para>
+    /// 	<para>创建：张宏伟</para>
     /// 	<para>日期：2016/4/2</para>
     /// </remarks>
     public class RedisContext
@@ -20,7 +23,7 @@ namespace Leo.Microservice.Redis
         /// 缓存对象集合容器池
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         internal Lazy<Dictionary<string, List<string>>> _cachingContextPool;
@@ -29,7 +32,7 @@ namespace Leo.Microservice.Redis
         /// 密码
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         internal string _password = null;
@@ -39,7 +42,7 @@ namespace Leo.Microservice.Redis
         /// 默认缓存失效时间
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         internal string _defaultExpireTime = null;
@@ -48,7 +51,7 @@ namespace Leo.Microservice.Redis
         /// 连接失效时间
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         internal string _connectTimeout = null;
@@ -57,7 +60,7 @@ namespace Leo.Microservice.Redis
         /// 规则名（现在只实现哈希一致性）
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         internal string _ruleName = null;
@@ -66,20 +69,20 @@ namespace Leo.Microservice.Redis
         /// 哈希节点容器
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
-        internal ConcurrentDictionary<string, ConsistentHash<ConsistentHashNode>> dicHash;
+        internal ConcurrentDictionary<string, ConsistentHash<RedisEndPoint>> dicHash;
 
         /// <summary>
         /// 对象池上限
         /// </summary>
-        internal string _maxSize = null;
+        internal int _maxSize ;
 
         /// <summary>
         /// 对象池下限
         /// </summary>
-        internal string _minSize = null;
+        internal int _minSize ;
 
         #region 构造函数
         /// <summary>
@@ -88,15 +91,15 @@ namespace Leo.Microservice.Redis
         /// <param name="rule">规则</param>
         /// <param name="args">参数</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
-        public RedisContext(string rule, params object[] args)
+        public RedisContext(string rule, IContainer container,params object[] args)
         {
-            if (CacheContainer.IsRegistered<IHashAlgorithm>())
-                _hashAlgorithm = CacheContainer.GetService<IHashAlgorithm>();
-            else
-                _hashAlgorithm = CacheContainer.GetInstances<IHashAlgorithm>();
+            if (container.IsRegistered<IHashAlgorithm>())
+                _hashAlgorithm = container.Resolve<IHashAlgorithm>();
+            //else
+            //    _hashAlgorithm = container.GetInstances<IHashAlgorithm>();
             foreach (var arg in args)
             {
                 var properties = arg.GetType().GetProperties();
@@ -135,7 +138,7 @@ namespace Leo.Microservice.Redis
                 }
             }
             _ruleName = rule;
-            dicHash = new ConcurrentDictionary<string, ConsistentHash<ConsistentHashNode>>();
+            dicHash = new ConcurrentDictionary<string, ConsistentHash<RedisEndPoint>>();
             InitSettingHashStorage();
         }
         #endregion
@@ -161,7 +164,7 @@ namespace Leo.Microservice.Redis
         /// 缓存对象集合容器池
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public Dictionary<string, List<string>> DataContextPool
@@ -176,17 +179,14 @@ namespace Leo.Microservice.Redis
         /// 初始化设置哈希节点容器
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         private void InitSettingHashStorage()
         {
             foreach (var dataContext in DataContextPool)
             {
-                CacheTargetType targetType;
-                if (!Enum.TryParse(dataContext.Key, true, out targetType)) continue;
-                var hash =
-                    new ConsistentHash<ConsistentHashNode>(_hashAlgorithm);
+                var hash = new ConsistentHash<RedisEndPoint>(_hashAlgorithm);
 
                 dataContext.Value.ForEach(v =>
                 {
@@ -202,19 +202,17 @@ namespace Leo.Microservice.Redis
                     {
                         db = dbs[dbs.Length - 1];
                     }
-                    var node = new ConsistentHashNode()
+                    var node = new RedisEndPoint()
                     {
-                        Type = targetType,
                         Host = endpoints[0],
-                        Port = endpoints[1],
-                        UserName = username,
+                        Port = int.Parse(endpoints[1]),
                         Password = password,
                         MaxSize = this._maxSize,
                         MinSize = this._minSize,
-                        Db = db.ToString()
+                        DbIndex = int.Parse(db) //数据库索引 127.0.0.1:2222::2 索引为2
                     };
                     hash.Add(node, string.Format("{0}:{1}", node.Host, node.Port));
-                    dicHash.GetOrAdd(targetType.ToString(), hash);
+                    dicHash.GetOrAdd(dataContext.Key, hash);
                 });
             }
         }

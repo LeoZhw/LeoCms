@@ -7,6 +7,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace Leo.Microservice.Redis
             _serviceRouteManager.Created += ServiceRouteManager_Add;
         }
 
-        public async ValueTask<ConsistentHashNode> Resolver(string cacheId, string item)
+        public async ValueTask<EndPoint> Resolver(string cacheId, string item)
         {
 
             _concurrent.TryGetValue(cacheId, out ServiceRoute descriptor);
@@ -66,32 +67,32 @@ namespace Leo.Microservice.Redis
             if (_logger.IsEnabled(LogLevel.Information))
                 _logger.LogInformation($"根据缓存id：{cacheId}，找到以下可用地址：{string.Join(",", descriptor.Address.Select(i => i.ToString()))}。");
             var redisContext = _container.ResolveKeyed<RedisContext>(descriptor.ServiceRouteDescriptor.Id);
-            ConsistentHash<ConsistentHashNode> hash;
-            redisContext.dicHash.TryGetValue(descriptor.CacheDescriptor.Type, out hash);
-            return hash != null ? hash.GetItemNode(item) : default(ConsistentHashNode);
+            ConsistentHash<RedisEndPoint> hash;
+            redisContext.dicHash.TryGetValue("redis", out hash);
+            return hash != null ? hash.GetItemNode(item) : default(RedisEndPoint);
         }
 
 
-        private static string GetKey(CacheDescriptor descriptor)
+        private static string GetKey(ServiceRouteDescriptor descriptor)
         {
             return descriptor.Id;
         }
 
         private void ServiceRouteManager_Removed(object sender, ServiceRouteEventArgs e)
         {
-            var key = GetKey(e.Cache.CacheDescriptor);
-            if (CacheContainer.IsRegistered<RedisContext>(e.Cache.CacheDescriptor.Prefix))
+            var key = GetKey(e.Route.ServiceRouteDescriptor);
+            if (_container.IsRegisteredWithKey<RedisContext>(e.Route.ServiceRouteDescriptor.Id))
             {
-                var redisContext = CacheContainer.GetService<RedisContext>(e.Cache.CacheDescriptor.Prefix);
+                var redisContext = _container.ResolveKeyed<RedisContext>(e.Route.ServiceRouteDescriptor.Id);
                 ServiceRoute value;
                 _concurrent.TryRemove(key, out value);
-                ConsistentHash<ConsistentHashNode> hash;
-                redisContext.dicHash.TryGetValue(e.Cache.CacheDescriptor.Type, out hash);
+                ConsistentHash<RedisEndPoint> hash;
+                redisContext.dicHash.TryGetValue("redis", out hash);
                 if (hash != null)
-                    foreach (var node in e.Cache.CacheEndpoint)
+                    foreach (var node in e.Route.Address)
                     {
 
-                        var hashNode = node as ConsistentHashNode;
+                        var hashNode = node as RedisEndPoint;
                         var addr = string.Format("{0}:{1}", hashNode.Host, hashNode.Port);
                         hash.Remove(addr);
                         hash.Add(hashNode, addr);
@@ -101,17 +102,17 @@ namespace Leo.Microservice.Redis
 
         private void ServiceRouteManager_Add(object sender, ServiceRouteEventArgs e)
         {
-            var key = GetKey(e.Cache.CacheDescriptor);
-            if (CacheContainer.IsRegistered<RedisContext>(e.Cache.CacheDescriptor.Prefix))
+            var key = GetKey(e.Route.ServiceRouteDescriptor);
+            if (_container.IsRegisteredWithKey<RedisContext>(e.Route.ServiceRouteDescriptor.Id))
             {
-                var redisContext = CacheContainer.GetService<RedisContext>(e.Cache.CacheDescriptor.Prefix);
-                _concurrent.GetOrAdd(key, e.Cache);
-                ConsistentHash<ConsistentHashNode> hash;
-                redisContext.dicHash.TryGetValue(e.Cache.CacheDescriptor.Type, out hash);
+                var redisContext = _container.ResolveKeyed<RedisContext>(e.Route.ServiceRouteDescriptor.Id);
+                _concurrent.GetOrAdd(key, e.Route);
+                ConsistentHash<RedisEndPoint> hash;
+                redisContext.dicHash.TryGetValue("redis", out hash);
                 if (hash != null)
-                    foreach (var node in e.Cache.CacheEndpoint)
+                    foreach (var node in e.Route.Address)
                     {
-                        var hashNode = node as ConsistentHashNode;
+                        var hashNode = node as RedisEndPoint;
                         var addr = string.Format("{0}:{1}", hashNode.Host, hashNode.Port);
                         hash.Remove(addr);
                         hash.Add(hashNode, addr);

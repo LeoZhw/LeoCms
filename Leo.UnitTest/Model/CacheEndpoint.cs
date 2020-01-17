@@ -4,13 +4,13 @@ using System.Text;
 
 namespace Leo.Microservice.Abstractions.Cache.Model
 {
-    public abstract class CacheEndpoint
+    public abstract class ConsistentHashNode
     {
         /// <summary>
         /// 主机
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public string Host
@@ -23,7 +23,7 @@ namespace Leo.Microservice.Abstractions.Cache.Model
         /// 端口
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public int Port
@@ -38,7 +38,7 @@ namespace Leo.Microservice.Abstractions.Cache.Model
 
         public override bool Equals(object obj)
         {
-            var model = obj as CacheEndpoint;
+            var model = obj as ConsistentHashNode;
             if (model == null)
                 return false;
 
@@ -53,12 +53,12 @@ namespace Leo.Microservice.Abstractions.Cache.Model
             return ToString().GetHashCode();
         }
 
-        public static bool operator ==(CacheEndpoint model1, CacheEndpoint model2)
+        public static bool operator ==(ConsistentHashNode model1, ConsistentHashNode model2)
         {
             return Equals(model1, model2);
         }
 
-        public static bool operator !=(CacheEndpoint model1, CacheEndpoint model2)
+        public static bool operator !=(ConsistentHashNode model1, ConsistentHashNode model2)
         {
             return !Equals(model1, model2);
         }

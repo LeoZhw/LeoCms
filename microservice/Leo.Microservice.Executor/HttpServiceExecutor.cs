@@ -37,8 +37,8 @@ namespace Leo.Microservice.Executor
             if (_logger.IsEnabled(LogLevel.Trace))
                 _logger.LogTrace($"服务提供者接收到消。");
             Console.WriteLine($"服务提供者接收到消息，Content:{message.Content}，ID:{ message.Id}");
+            sender.SendAndFlushAsync(message);
             return;
-
         }
         #endregion Implementation of IServiceExecutor
     }

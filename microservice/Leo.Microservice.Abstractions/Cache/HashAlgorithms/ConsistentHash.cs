@@ -11,7 +11,7 @@ namespace Leo.Microservice.Abstractions.Cache.HashAlgorithms
     /// </summary>
     /// <typeparam name="T">类型</typeparam>
     /// <remarks>
-    /// 	<para>创建：范亮</para>
+    /// 	<para>创建：张宏伟</para>
     /// 	<para>日期：2016/4/2</para>
     /// </remarks>
     public class ConsistentHash<T>
@@ -39,7 +39,7 @@ namespace Leo.Microservice.Abstractions.Cache.HashAlgorithms
         /// 复制哈希节点数
         /// </summary>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public int VirtualNodeReplicationFactor
@@ -54,7 +54,7 @@ namespace Leo.Microservice.Abstractions.Cache.HashAlgorithms
         /// </summary>
         /// <param name="node">节点</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void Add(T node, string value)
@@ -73,7 +73,7 @@ namespace Leo.Microservice.Abstractions.Cache.HashAlgorithms
         /// </summary>
         /// <param name="node">节点</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public void Remove(string node)
@@ -88,7 +88,7 @@ namespace Leo.Microservice.Abstractions.Cache.HashAlgorithms
         /// <param name="item">值</param>
         /// <returns>返回节点</returns>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         public T GetItemNode(string item)
@@ -103,7 +103,7 @@ namespace Leo.Microservice.Abstractions.Cache.HashAlgorithms
         /// </summary>
         /// <param name="node">节点</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         private void AddNode(T node, string value)
@@ -120,7 +120,7 @@ namespace Leo.Microservice.Abstractions.Cache.HashAlgorithms
         /// </summary>
         /// <param name="node">节点</param>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         private void RemoveNode(string value)
@@ -140,7 +140,7 @@ namespace Leo.Microservice.Abstractions.Cache.HashAlgorithms
         /// <param name="hashOfItem">哈希值</param>
         /// <returns>返回哈希的位置</returns>
         /// <remarks>
-        /// 	<para>创建：范亮</para>
+        /// 	<para>创建：张宏伟</para>
         /// 	<para>日期：2016/4/2</para>
         /// </remarks>
         private int GetClockwiseNearestNode(int[] keys, int hashOfItem)

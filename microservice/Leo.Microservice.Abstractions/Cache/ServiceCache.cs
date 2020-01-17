@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
-namespace Leo.Microservice.Abstractions.Cache.Model
+namespace Leo.Microservice.Abstractions.Cache
 {
     public class ServiceCache
     {
         /// <summary>
         /// 服务可用地址。
         /// </summary>
-        public IEnumerable<ConsistentHashNode> ConsistentHashNode { get; set; }
+        public IEnumerable<EndPoint> CacheEndpoint { get; set; }
         /// <summary>
         /// 服务描述符。
         /// </summary>
-        public CacheDescriptor CacheDescriptor { get; set; }
+        public ServiceCacheDescriptor CacheDescriptor { get; set; }
 
         #region Equality members
 
@@ -33,7 +34,7 @@ namespace Leo.Microservice.Abstractions.Cache.Model
             if (model.CacheDescriptor != CacheDescriptor)
                 return false;
 
-            return model.ConsistentHashNode.Count() == ConsistentHashNode.Count() && model.ConsistentHashNode.All(addressModel => ConsistentHashNode.Contains(addressModel));
+            return model.CacheEndpoint.Count() == CacheEndpoint.Count() && model.CacheEndpoint.All(addressModel => CacheEndpoint.Contains(addressModel));
         }
 
         /// <summary>Serves as the default hash function. </summary>

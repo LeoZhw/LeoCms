@@ -1,11 +1,11 @@
 ﻿using Leo.Microservice.Abstractions.Cache;
 using Leo.Microservice.Abstractions.Cache.HashAlgorithms;
-using Leo.Microservice.Abstractions.Cache.Model;
 using Leo.Microservice.Utils;
 using StackExchange.Redis;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +13,6 @@ namespace Leo.Microservice.Redis
 {
     public class RedisCacheClient<T> : ICacheClient<T>
             where T : class
-
     {
         private static readonly ConcurrentDictionary<string, Lazy<ObjectPool<T>>> _pool =
             new ConcurrentDictionary<string, Lazy<ObjectPool<T>>>();
@@ -23,12 +22,12 @@ namespace Leo.Microservice.Redis
 
         }
 
-        public async Task<bool> ConnectionAsync(CacheEndpoint endpoint, int connectTimeout)
+        public async Task<bool> ConnectionAsync(EndPoint endpoint, int connectTimeout)
         {
             ConnectionMultiplexer conn = null;
             try
             {
-                var info = endpoint as ConsistentHashNode;
+                var info = endpoint as RedisEndPoint;
                 var point = string.Format("{0}:{1}", info.Host, info.Port);
                 conn = await ConnectionMultiplexer.ConnectAsync(new ConfigurationOptions()
                 {
@@ -50,11 +49,11 @@ namespace Leo.Microservice.Redis
             }
         }
 
-        public T GetClient(CacheEndpoint endpoint, int connectTimeout)
+        public T GetClient(EndPoint endpoint, int connectTimeout)
         {
             try
             {
-                var info = endpoint as RedisEndpoint;
+                var info = endpoint as RedisEndPoint;
                 Check.NotNull(info, "endpoint");
                 var key = string.Format("{0}{1}{2}{3}", info.Host, info.Port, info.Password, info.DbIndex);
                 if (!_pool.ContainsKey(key))

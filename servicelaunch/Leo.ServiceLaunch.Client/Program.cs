@@ -3,6 +3,7 @@ using Leo.Microservice.Abstractions.Executor;
 using Leo.Microservice.Abstractions.Serialization;
 using Leo.Microservice.Abstractions.Transport;
 using Leo.Microservice.DotNetty;
+using Leo.Microservice.Executor;
 using Leo.Microservice.Extensions.ServiceHostBuilder;
 using Leo.Microservice.Host;
 using Leo.Microservice.MessagePack;
@@ -21,6 +22,7 @@ namespace Leo.ServiceLaunch.Client
                 .RegisterServices(builder =>
                 {
                     builder.RegisterType<MessagePackTransportMessageCodecFactory>().As<ITransportMessageCodecFactory>().SingleInstance();
+                    builder.RegisterType(typeof(ClientExecutor)).As(typeof(IServiceExecutor)).SingleInstance();
                     builder.Register(provider =>
                     {
                         IServiceExecutor serviceExecutor = null;  
