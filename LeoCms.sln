@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.Configurat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leo.Microservice.RabbitMQ", "microservice\Leo.Microservice.RabbitMQ\Leo.Microservice.RabbitMQ.csproj", "{75878E3D-E459-4325-B257-F3A366282020}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leo.Kong", "Leo.Kong\Leo.Kong.csproj", "{D446B0BA-6961-4669-99CB-A2A015342066}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{75878E3D-E459-4325-B257-F3A366282020}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75878E3D-E459-4325-B257-F3A366282020}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75878E3D-E459-4325-B257-F3A366282020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D446B0BA-6961-4669-99CB-A2A015342066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D446B0BA-6961-4669-99CB-A2A015342066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D446B0BA-6961-4669-99CB-A2A015342066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D446B0BA-6961-4669-99CB-A2A015342066}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -162,6 +168,7 @@ Global
 		{F7B30A49-EE82-499A-9B81-F17E776DED8D} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
 		{5DE1822A-692E-465F-8745-C0DAF35CC7FA} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
 		{75878E3D-E459-4325-B257-F3A366282020} = {9DDDEC8B-EFA1-4751-9C6A-A72A48870345}
+		{D446B0BA-6961-4669-99CB-A2A015342066} = {70A275CA-64B1-42CF-8CB5-9F9825D5E3F1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09BC2F5A-456F-4FB7-9E2E-D381D011BFEC}
